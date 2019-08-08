@@ -1,13 +1,20 @@
-$(async function() {
+$(async function () {
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
   const $submitForm = $("#submit-form");
   const $filteredArticles = $("#filtered-articles");
+  const $favoritedArticles = $("#favorited-articles");
   const $loginForm = $("#login-form");
   const $createAccountForm = $("#create-account-form");
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
+  const $navSubmit = $("#nav-submit");
+  const $navMystories = $("#nav-mystories");
+  const $navFavorites = $("#nav-myfavorites");
+  const $navLoggedIn = $(".nav-logged-in");
+
+  console.log($loginForm);
 
   // global storyList variable
   let storyList = null;
@@ -22,7 +29,7 @@ $(async function() {
    *  If successfully we will setup the user instance
    */
 
-  $loginForm.on("submit", async function(evt) {
+  $loginForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
 
     // grab the username and password
@@ -42,7 +49,7 @@ $(async function() {
    *  If successfully we will setup a new user instance
    */
 
-  $createAccountForm.on("submit", async function(evt) {
+  $createAccountForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page refresh
 
     // grab the required fields
@@ -61,9 +68,11 @@ $(async function() {
    * Log Out Functionality
    */
 
-  $navLogOut.on("click", function() {
+  $navLogOut.on("click", function () {
     // empty out local storage
     localStorage.clear();
+    // $navLogin.show();
+    // $navLogOut.hide();
     // refresh the page, clearing memory
     location.reload();
   });
@@ -72,8 +81,9 @@ $(async function() {
    * Event Handler for Clicking Login
    */
 
-  $navLogin.on("click", function() {
+  $navLogin.on("click", function () {
     // Show the Login and Create Account Forms
+    console.log($loginForm);
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
@@ -83,7 +93,7 @@ $(async function() {
    * Event handler for Navigation to Homepage
    */
 
-  $("body").on("click", "#nav-all", async function() {
+  $("body").on("click", "#nav-all", async function () {
     hideElements();
     await generateStories();
     $allStoriesList.show();
@@ -129,6 +139,7 @@ $(async function() {
     // update the navigation bar
     showNavForLoggedInUser();
   }
+
 
   /**
    * A rendering function to call the StoryList.getStories static method,
@@ -189,6 +200,7 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
+    // $navLoggedIn.show();
   }
 
   /* simple function to pull the hostname from a URL */
@@ -214,4 +226,17 @@ $(async function() {
       localStorage.setItem("username", currentUser.username);
     }
   }
+
+  // // Event handler for submit a new story 
+
+  // // $navSubmit.on('click', function (e) {
+  // //   e.preventDefault();
+  // //   $submitForm.show();
+  // //   console.log('submit click');
+  // });
 });
+
+
+
+
+

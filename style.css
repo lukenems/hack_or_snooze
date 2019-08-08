@@ -36,6 +36,10 @@ a:hover {
 }
 
 
+.nav-logged-in {
+  border-left: 1px solid black;
+  text-align: center;
+}
 
 nav {
   display: flex;
