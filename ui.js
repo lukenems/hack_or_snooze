@@ -14,8 +14,6 @@ $(async function () {
   const $navFavorites = $("#nav-myfavorites");
   const $navLoggedIn = $(".nav-logged-in");
 
-  console.log($loginForm);
-
   // global storyList variable
   let storyList = null;
 
@@ -71,8 +69,8 @@ $(async function () {
   $navLogOut.on("click", function () {
     // empty out local storage
     localStorage.clear();
-    // $navLogin.show();
-    // $navLogOut.hide();
+    $navLogin.show();
+    $navLogOut.hide();
     // refresh the page, clearing memory
     location.reload();
   });
@@ -171,6 +169,7 @@ $(async function () {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
+      <i class="heart far fa-heart"></i>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
@@ -200,7 +199,7 @@ $(async function () {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
-    // $navLoggedIn.show();
+    $navLoggedIn.show();
   }
 
   /* simple function to pull the hostname from a URL */
@@ -227,13 +226,42 @@ $(async function () {
     }
   }
 
-  // // Event handler for submit a new story 
+  // Event handler for submit a new story 
 
-  // // $navSubmit.on('click', function (e) {
-  // //   e.preventDefault();
-  // //   $submitForm.show();
-  // //   console.log('submit click');
-  // });
+  $navSubmit.on('click', function (e) {
+    e.preventDefault();
+    $submitForm.slideToggle();
+  });
+
+  $submitForm.on('submit', async function (e) {
+    e.preventDefault();
+    let $submitAuthor = $('#author').val();
+    let $submitTitle = $('#title').val();
+    let $submitUrl = $('#url').val();
+    let userToken = currentUser.loginToken;
+
+    await StoryList.addStory(userToken, [$submitAuthor, $submitTitle, $submitUrl])
+      .then(setTimeout(function () {
+        generateStories();
+      }, 100));
+
+    $submitForm.slideToggle();
+    $('#author').val('');
+    $('#title').val('');
+    $('#url').val('');
+  })
+
+  $(".heart").on('click', function (e) {
+
+    if ($(e.target).hasClass('far')) {
+      $(e.target).addClass('fas');
+      $(e.target).removeClass('far');
+    } else {
+      $(e.target).addClass('far');
+      $(e.target).removeClass('fas');
+    }
+  })
+
 });
 
 
