@@ -321,15 +321,15 @@ $(async function () {
     })
   
     // Specify and delete Favorite
-    $allStoriesList.on('click', '.heart', function (e) {
+    $allStoriesList.on('click', '.heart', async function (e) {
       let favStoryId = $(e.target).attr('data-story-id');
       //change to toggleClass
       if ($(e.target).hasClass('far')) {
-        User.newFavorite(currentUser.username, favStoryId, currentUser.loginToken);
+        currentUser.favorites = await User.newFavorite(currentUser.username, favStoryId, currentUser.loginToken);
         $(e.target).addClass('fas');
         $(e.target).removeClass('far');
       } else if ($(e.target).hasClass('fas')) {
-        User.favoriteDelete(currentUser.username, favStoryId, currentUser.loginToken);
+        currentUser.favorites = await User.favoriteDelete(currentUser.username, favStoryId, currentUser.loginToken);
         $(e.target).addClass('far');
         $(e.target).removeClass('fas');
       }
@@ -338,11 +338,10 @@ $(async function () {
     // Display Nav Favorites
     $navFavorites.on('click', async function (e) {
       e.preventDefault();
-      let favorites = await User.userFavorites(currentUser.username, currentUser.loginToken);
-  
+    //   let favorites = await User.userFavorites(currentUser.username, currentUser.loginToken);
       $allStoriesList.empty();
       //current user.favorites
-      for (let story of favorites) {
+      for (let story of currentUser.favorites) {
         const result = generateStoryHTMLFav(story);
         $allStoriesList.append(result);
       }

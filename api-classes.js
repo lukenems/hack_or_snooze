@@ -47,7 +47,7 @@ class StoryList {
     // TODO - Implement this functions!
     // this function should return the newly created story so it can be used in
     // the script.js file where it will be appended to the DOM
-    await axios.post(`${BASE_URL}/stories`, {
+    let result = await axios.post(`${BASE_URL}/stories`, {
       'token': user,
       'story': {
         'author': newStory[0],
@@ -80,17 +80,19 @@ class User {
   /* Get New Favorite */
 //change naming
   static async newFavorite(username, storyId, token) {
-    await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { 'token': token });
+    let user = await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { 'token': token });
+    return user.data.user.favorites;
   }
 //change naming
   static async favoriteDelete(username, storyId, token) {
-    await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: { 'token': token } });
-  }
-
-  static async userFavorites(username, token) {
-    let user = await axios.get(`${BASE_URL}/users/${username}`, { params: { 'token': token } });
+    let user = await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: { 'token': token } });
     return user.data.user.favorites;
   }
+
+//   static async userFavorites(username, token) {
+//     let user = await axios.get(`${BASE_URL}/users/${username}`, { params: { 'token': token } });
+//     return user.data.user.favorites;
+//   }
 
   /* Create and return a new user.
    *
