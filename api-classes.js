@@ -43,7 +43,7 @@ class StoryList {
    * Returns the new story object
    */
 
-   static async addStory(user, newStory) {
+  static async addStory(user, newStory) {
     // TODO - Implement this functions!
     // this function should return the newly created story so it can be used in
     // the script.js file where it will be appended to the DOM
@@ -54,7 +54,7 @@ class StoryList {
         'title': newStory[1],
         'url': newStory[2]
       }
-    })
+    });
   }
 }
 
@@ -78,21 +78,20 @@ class User {
   }
 
   /* Get New Favorite */
-
+//change naming
   static async newFavorite(username, storyId, token) {
-    // console.log(`${BASE_URL}/users/${username}/favorites/${storyId}`);
     await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { 'token': token });
   }
-
+//change naming
   static async favoriteDelete(username, storyId, token) {
-    await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: { 'token': token }});
+    await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: { 'token': token } });
   }
 
   static async userFavorites(username, token) {
-    let user = await axios.get(`${BASE_URL}/users/${username}`, { params: { 'token': token }});
+    let user = await axios.get(`${BASE_URL}/users/${username}`, { params: { 'token': token } });
     return user.data.user.favorites;
   }
-  
+
   /* Create and return a new user.
    *
    * Makes POST request to API and returns newly-created user.
@@ -174,6 +173,15 @@ class User {
     existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
     existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
     return existingUser;
+  }
+
+  static async getUserStories(username, token) {
+    const stories = await axios.get(`${BASE_URL}/users/${username}`, { params: { token } });
+    return stories.data.user;
+  }
+
+  static async deleteUserStory(storyId, token) {
+    await axios.delete(`${BASE_URL}/stories/${storyId}`, { data: { 'token': token } });
   }
 }
 
