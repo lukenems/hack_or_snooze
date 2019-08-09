@@ -340,7 +340,8 @@ $(async function () {
     e.preventDefault();
     let favorites = await User.userFavorites(currentUser.username, currentUser.loginToken);
     //
-    //currentUser.favorites
+    // let favorites = this.newFavorite;
+    // console.log(this);
 
     $allStoriesList.empty();
     //current user.favorites
@@ -353,17 +354,17 @@ $(async function () {
   //Display Nav Stories
   $navMystories.on('click', async function (e) {
     e.preventDefault();
-    // OLD --->>>> let stories = await User.getUserStories(currentUser.username, currentUser.loginToken);
+    let stories = await User.getUserStories(currentUser.username, currentUser.loginToken);
     $allStoriesList.empty();
-    let userFavoriteStories = currentUser.favorites;
+    // let stories = currentUser.favorites;
     for (let myStory of currentUser.ownStories) {
-      for (let i = 0; i < userFavoriteStories.length; i++) {
-        if (userFavoriteStories[i].storyId === myStory.storyId) {
+      for (let i = 0; i < stories.length; i++) {
+        if (stories[i].storyId === myStory.storyId) {
           const result = generateStoryHTMLMyStoryFav(myStory);
           $allStoriesList.append(result);
           break;
         }
-        if (i === userFavoriteStories.length - 1) {
+        if (i === stories.length - 1) {
           const result = generateStoryHTMLMyStories(myStory);
           $allStoriesList.append(result);
         }

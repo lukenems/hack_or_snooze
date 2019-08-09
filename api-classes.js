@@ -81,6 +81,7 @@ class User {
 //change naming
   static async newFavorite(username, storyId, token) {
     await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { 'token': token });
+
   }
 //change naming
   static async favoriteDelete(username, storyId, token) {
