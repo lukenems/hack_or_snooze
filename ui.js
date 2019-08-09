@@ -339,6 +339,8 @@ $(async function () {
   $navFavorites.on('click', async function (e) {
     e.preventDefault();
     let favorites = await User.userFavorites(currentUser.username, currentUser.loginToken);
+    //
+    //currentUser.favorites
 
     $allStoriesList.empty();
     //current user.favorites
@@ -351,20 +353,17 @@ $(async function () {
   //Display Nav Stories
   $navMystories.on('click', async function (e) {
     e.preventDefault();
-    //currentUser.stories
-    let stories = await User.getUserStories(currentUser.username, currentUser.loginToken);
+    // OLD --->>>> let stories = await User.getUserStories(currentUser.username, currentUser.loginToken);
     $allStoriesList.empty();
-    // console.log(stories)
-    let favStories = stories.favorites;
-
-    for (let myStory of stories.stories) {
-      for (let i = 0; i < favStories.length; i++) {
-        if (favStories[i].storyId === myStory.storyId) {
+    let userFavoriteStories = currentUser.favorites;
+    for (let myStory of currentUser.ownStories) {
+      for (let i = 0; i < userFavoriteStories.length; i++) {
+        if (userFavoriteStories[i].storyId === myStory.storyId) {
           const result = generateStoryHTMLMyStoryFav(myStory);
           $allStoriesList.append(result);
           break;
         }
-        if (i === favStories.length - 1) {
+        if (i === userFavoriteStories.length - 1) {
           const result = generateStoryHTMLMyStories(myStory);
           $allStoriesList.append(result);
         }
@@ -411,8 +410,6 @@ $(async function () {
     $('#profile-name').append(` ${currentUser.name}`);
     $('#profile-username').append(` ${currentUser.username}`);
     $('#profile-account-date').append(` ${currentUser.createdAt}`);
-
-
   })
 
 });
