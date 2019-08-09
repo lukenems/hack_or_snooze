@@ -77,6 +77,22 @@ class User {
     this.ownStories = [];
   }
 
+  /* Get New Favorite */
+
+  static async newFavorite(username, storyId, token) {
+    // console.log(`${BASE_URL}/users/${username}/favorites/${storyId}`);
+    await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { 'token': token });
+  }
+
+  static async favoriteDelete(username, storyId, token) {
+    await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: { 'token': token }});
+  }
+
+  static async userFavorites(username, token) {
+    let user = await axios.get(`${BASE_URL}/users/${username}`, { params: { 'token': token }});
+    return user.data.user.favorites;
+  }
+  
   /* Create and return a new user.
    *
    * Makes POST request to API and returns newly-created user.

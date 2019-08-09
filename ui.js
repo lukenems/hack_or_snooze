@@ -11,8 +11,11 @@ $(async function () {
   const $navLogOut = $("#nav-logout");
   const $navSubmit = $("#nav-submit");
   const $navMystories = $("#nav-mystories");
-  const $navFavorites = $("#nav-myfavorites");
+  const $navFavorites = $("#nav-favorites");
   const $navLoggedIn = $(".nav-logged-in");
+  const $hearts = $(".heart");
+
+  $hearts.addClass('hidden');
 
   // global storyList variable
   let storyList = null;
@@ -67,6 +70,8 @@ $(async function () {
    */
 
   $navLogOut.on("click", function () {
+    
+ 
     // empty out local storage
     localStorage.clear();
     $navLogin.show();
@@ -169,7 +174,7 @@ $(async function () {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
-      <i class="heart far fa-heart"></i>
+        <i data-story-id="${story.storyId}" class="heart far fa-heart"></i>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
@@ -179,6 +184,27 @@ $(async function () {
       </li>
     `);
 
+    return storyMarkup;
+  }
+
+  /** Copy Render HTML function for Favorites */
+  function generateStoryHTMLFav(story) {
+    let hostName = getHostName(story.url);
+
+    // render story markup
+    const storyMarkup = $(`
+      <li id="${story.storyId}">
+      <i data-story-id="${story.storyId}" class="heart fas fa-heart"></i>
+        <a class="article-link" href="${story.url}" target="a_blank">
+          <strong>${story.title}</strong>
+        </a>
+        <small class="article-author">by ${story.author}</small>
+        <small class="article-hostname ${hostName}">(${hostName})</small>
+        <small class="article-username">posted by ${story.username}</small>
+      </li>
+    `);
+
+    
     return storyMarkup;
   }
 
@@ -251,17 +277,46 @@ $(async function () {
     $('#url').val('');
   })
 
-  $(".heart").on('click', function (e) {
+  $allStoriesList.on('click', '.heart', function (e) {
 
+    let favStoryId = $(e.target).attr('data-story-id');
     if ($(e.target).hasClass('far')) {
+      User.newFavorite(currentUser.username, favStoryId, currentUser.loginToken);
       $(e.target).addClass('fas');
       $(e.target).removeClass('far');
-    } else {
+    } else if ($(e.target).hasClass('fas')) {
+      User.favoriteDelete(currentUser.username, favStoryId, currentUser.loginToken);
       $(e.target).addClass('far');
       $(e.target).removeClass('fas');
     }
-  })
+  });
 
+  // $(".heart").on('click', function (e) {
+
+  //   console.log('heart click');
+  //   if ($(e.target).hasClass('far')) {
+  //     $(e.target).addClass('fas');
+  //     $(e.target).removeClass('far');
+  //   } else if ($(e.target).hasClass('fas')) {
+  //     $(e.target).addClass('far');
+  //     $(e.target).removeClass('fas');
+  //   }
+  //   let favStoryId = $(e.target).attr('data-story-id');
+
+  //   User.newFavorite(currentUser.username, favStoryId, currentUser.loginToken);
+  // })
+
+
+  $navFavorites.on('click', async function (e) {
+    e.preventDefault();
+    let favorites = await User.userFavorites(currentUser.username, currentUser.loginToken);
+
+    $allStoriesList.empty();
+    for (let story of favorites) {
+      const result = generateStoryHTMLFav(story);
+      $allStoriesList.append(result);
+    }
+  });
 });
 
 
