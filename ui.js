@@ -162,6 +162,7 @@ $(async function () {
       storyList = storyListInstance;
       // empty out that part of the page
       $allStoriesList.empty();
+      $userProfile.hide();
   
       // loop through all of our stories and generate HTML for them
       for (let story of storyList.stories) {
@@ -337,6 +338,7 @@ $(async function () {
   
     // Display Nav Favorites
     $navFavorites.on('click', async function (e) {
+        $userProfile.hide();
       e.preventDefault();
     //   let favorites = await User.userFavorites(currentUser.username, currentUser.loginToken);
       $allStoriesList.empty();
@@ -349,6 +351,7 @@ $(async function () {
   
     //Display Nav Stories
     $navMystories.on('click', async function (e) {
+      $userProfile.hide();
       e.preventDefault();
       //currentUser.stories
       let stories = await User.getUserStories(currentUser.username, currentUser.loginToken);
@@ -407,12 +410,14 @@ $(async function () {
   
       $allStoriesList.empty();
       $userProfile.show();
-      $('#profile-name').append(` ${currentUser.name}`);
-      $('#profile-username').append(` ${currentUser.username}`);
-      $('#profile-account-date').append(` ${currentUser.createdAt}`);
+      $('#profile-name').html(`Name: ${currentUser.name}`);
+      $('#profile-username').html(`Username: ${currentUser.username}`);
+      $('#profile-account-date').html(`Account created: ${currentUser.createdAt}`);
   
   
-    })
+    });
+
+
   
   });
   
